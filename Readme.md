@@ -12,11 +12,12 @@ The base OpenStreetMap file has been enhanced to provide the necessary informati
 - Start/end nodes of the river ways where tagged with note=Abschnitt
 
 Map rendering is done with Maperitive, a map renderer available for free at [maperitive.net](http:///maperitive.net). 
+Maperitive executable needs to be in Windows PATH env. variable to use the batch map script.
 - A python script concatenates name and rounded length information of the ways
 - A new rule set draws the river sections with the labels and end nodes
 - The map can be saved as vector image, e.g. PDF
 
-The system currently still involves some manual steps of editing and copying.
+A SVG image can be created by calling Maperitive/callMaperitive.bat.
 
 ## Feedback
 If you have ideas how this should evolve please let me know.
