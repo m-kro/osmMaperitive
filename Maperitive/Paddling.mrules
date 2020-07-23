@@ -80,7 +80,6 @@ features
 		quarry : landuse=quarry
 
 	lines
-	//  route paddle : osmnetwork[type=route AND route=paddle]
 		oneway : oneway=yes OR oneway=true OR oneway=-1
 		coastline : natural=coastline
 		river : way[waterway=river]
@@ -271,9 +270,9 @@ rules
 		elseif : graveyard
 			define
 				fill-color : #A9CAAE
-		elseif : building
-			define
-				fill-color : #BCA9A9
+//		elseif : building
+//			define
+//				fill-color : #BCA9A9
 		elseif : leisure pitch
 			define
 				fill-color : #89D2AE
@@ -294,9 +293,9 @@ rules
 		elseif : landuse industrial
 			define
 				fill-color : #DFD1D6
-		elseif : commercial area
-			define
-				fill-color : #EFC8C8
+//		elseif : commercial area
+//			define
+//				fill-color : #EFC8C8
 		elseif : military
 			define
 				fill-color : #FE9898
@@ -809,9 +808,17 @@ rules
 		draw : shape
 	target : pier
 		define
-			line-color : #F1EEE8
-			line-width : 1:1;20:8
+			line-color : #ffcc66
+			line-width : 1:1;16:8
 		draw : line
+        define
+            min-zoom:13
+            font-size:13:8;16:12;18:16
+            text-color : #000000
+            font-weight : normal
+            text-orientation : fixed
+            text-max-width : 20
+        draw : text	     
 
 	target : line barrier
 		define
@@ -838,18 +845,20 @@ rules
 	target : river
 		define
 			line-color : #73a5a5
-			line-width : 7:1;12:6;14:10
+			line-width : 7:1;16:4;18:8
 			line-start-cap : triangle
 			line-end-cap: triangle
 		draw : line
 		define
 			min-zoom:13
-			font-size:13:8;16:12
+			font-size:13:8;16:12;18:16
 			//text-color:#73a5a5
 			text-color : #000000
-			font-weight:normal
+			font-weight : bold
 			text-func: paddleLabel(e)
-		draw: text
+			text-orientation : fixed
+			text-max-width : 20
+		draw : text
 
 	target : stream
 		define
@@ -889,15 +898,6 @@ rules
 			min-zoom : 16
 			icon-width : 9
 		draw : icon
-	target: church
-		define
-			icon-image : icons/SJJB/png/place_of_worship_christian3.p.32.png
-			min-zoom : 16
-			icon-width : 16
-		define
-			text-offset-vertical : 150%
-		draw : text
-		draw : icon
 
 	target : gate
 		define
@@ -905,54 +905,6 @@ rules
 			min-zoom : 16
 			icon-width : 7
 		draw : icon
-
-	target : tourism*
-		define
-			min-zoom : 17
-			text-color : #2B80FE
-			text-offset-vertical : 150%
-		draw : text
-		if : *hotel
-			define
-				icon-image : icons/SJJB/png/accommodation_hotel2.p.32.png
-				min-zoom : 16
-				icon-width : 16
-
-		elseif : *viewpoint
-			define
-				icon-image : icons/SJJB/png/tourist_view_point.p.32.png
-				min-zoom : 16
-				icon-width : 16
-
-		elseif : *museum
-			define
-				icon-image : icons/SJJB/png/tourist_museum.p.32.png
-				min-zoom : 16
-				icon-width : 16
-		else
-			stop
-		draw : icon
-
-	target : amenity*
-		define
-			min-zoom : 17
-			text-color : #856951
-			text-offset-vertical : 150%
-		draw : text
-
-		define
-			min-zoom : 16
-			icon-width : 16
-		if : *pub
-			define
-				icon-image : icons/SJJB/png/food_pub.p.32.png
-		elseif : *fast_food
-			define
-				icon-image : icons/SJJB/png/food_fastfood2.p.32.png
-		else
-			stop
-		draw : icon
-
 
 	target: contour*
 		define
