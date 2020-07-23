@@ -9,4 +9,6 @@ REM execute
 maperitive -exitafter %scriptpath%
 
 REM export svg to pdf
-inkscape ../Result/BS_Okerumflut.svg --without-gui --export-area-page --export-pdf-version=1.4 --export-pdf=../Result/BS_okerumflut.pdf
+inkscape ../Result/BS_Okerumflut.svg --without-gui --export-area-page --export-pdf-version=1.4 --export-pdf=../Result/BS_Okerumflut.pdf
+inkscape ../Result/BS_Nord.svg --without-gui --export-area-page --export-pdf-version=1.4 --export-pdf=../Result/BS_Nord.pdf
+inkscape ../Result/BS_Sued.svg --without-gui --export-area-page --export-pdf-version=1.4 --export-pdf=../Result/BS_Sued.pdf
