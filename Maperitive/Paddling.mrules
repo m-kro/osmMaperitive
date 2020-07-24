@@ -806,19 +806,20 @@ rules
 			fill-color : #F98072
 			line-style : none
 		draw : shape
+		
 	target : pier
 		define
 			line-color : #ffcc66
 			line-width : 1:1;16:8
 		draw : line
-        define
-            min-zoom:13
-            font-size:13:8;16:12;18:16
-            text-color : #000000
-            font-weight : normal
-            text-orientation : fixed
-            text-max-width : 20
-        draw : text	     
+		define
+			min-zoom:13
+			font-size:13:8;16:12;18:16
+			text-color : #000000
+			font-weight : normal
+			text-orientation : fixed
+			text-max-width : 20
+		draw : text
 
 	target : line barrier
 		define
