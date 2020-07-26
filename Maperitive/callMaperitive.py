@@ -3,6 +3,8 @@ import subprocess
 from shutil import which
 from xml.etree import ElementTree as etree
 
+
+
 def findElements(root, elTag, elFilter):
     result = {}
     for el in root.findall(elTag):
@@ -26,6 +28,22 @@ def findElements(root, elTag, elFilter):
             result[el.attrib['id']] = attDict
             pass
     return result 
+
+def connectElements(ways, points):
+    for wayID, way in ways.items():
+        if not 'length' in way:
+            continue        
+        if 'firstNodeRef' in way and way['firstNodeRef'] in points:
+            nodeID = way['firstNodeRef']
+            if 'edgeSet' not in points[nodeID]:
+                points[nodeID]['edgeSet'] = set()
+            points[nodeID]['edgeSet'].add(wayID)
+        if 'lastNodeRef' in way and way['lastNodeRef'] in points:
+            nodeID = way['lastNodeRef']
+            if 'edgeSet' not in points[nodeID]:
+                points[nodeID]['edgeSet'] = set()
+            points[nodeID]['edgeSet'].add(wayID)
+                    
 
 scriptDir = os.path.dirname(os.path.realpath(__file__))
 
@@ -59,7 +77,16 @@ pointFilter = {'note': 'Abschnitt'}
 wayFilter = {'waterway': 'river'}
 ways = findElements(root, 'way', wayFilter)
 points = findElements(root, 'node', pointFilter)
-        
+connectElements(ways, points)
+
+# find branching points / start points: either 1 or 3+ connected edges
+for pointID, point in points.items():
+    if 'edgeSet' in point:
+        edgeCount = len(point['edgeSet'])
+        if edgeCount == 1 or edgeCount > 2:
+            print("%s (%s) is a branching point" % (pointID, point['name'] if 'name' in point else ''))
+            
+
 
 
 
