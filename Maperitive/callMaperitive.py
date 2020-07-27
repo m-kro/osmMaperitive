@@ -24,7 +24,8 @@ def findElements(root, elTag, elFilter):
                 nodeEls = el.findall('nd')
                 if len(nodeEls) > 0:
                     attDict['firstNodeRef'] = nodeEls[0].attrib['ref']
-                    attDict['lastNodeRef'] = nodeEls[-1].attrib['ref']         
+                    attDict['lastNodeRef'] = nodeEls[-1].attrib['ref']
+            attDict['id'] = el.attrib['id']       
             result[el.attrib['id']] = attDict
             pass
     return result 
@@ -48,7 +49,7 @@ def connectElements(ways, points):
 scriptDir = os.path.dirname(os.path.realpath(__file__))
 
 # check dependencies
-neededApps = ['inkscape', 'maperitive']
+neededApps = ['inkscape', 'maperitive', 'pdflatex']
 for neededApp in neededApps:
     if which(neededApp) is None:
         sys.exit("%s is crucial but cannot be accessed." % neededApp)
@@ -60,9 +61,9 @@ process.wait()
 
 # call Inkscape for SVG to PDF conversion
 svgFiles = ['BS_Okerumflut.svg', 'BS_Nord.svg', 'BS_Sued.svg']
-resultDir = os.path.dirname(os.path.dirname(scriptPath))
+resultDir = os.path.join(os.path.dirname(os.path.dirname(scriptPath)), 'Result')
 for svgFile in svgFiles:
-    svgPath = os.path.join(resultDir , "Result", svgFile)
+    svgPath = os.path.join(resultDir , svgFile)
     pdfPath = os.path.abspath("%s.pdf" % os.path.splitext(svgPath)[0])
     print("Convert to %s." % pdfPath)
     process = subprocess.Popen(['inkscape', svgPath, '--without-gui', '--export-area-page', '--export-pdf-version=1.4', "--export-pdf=%s" % pdfPath])
@@ -80,16 +81,74 @@ points = findElements(root, 'node', pointFilter)
 connectElements(ways, points)
 
 # find branching points / start points: either 1 or 3+ connected edges
+branchPointIDs = []
 for pointID, point in points.items():
     if 'edgeSet' in point:
         edgeCount = len(point['edgeSet'])
+        if edgeCount > 2:
+            branchPointIDs.append(pointID)
         if edgeCount == 1 or edgeCount > 2:
-            print("%s (%s) is a branching point" % (pointID, point['name'] if 'name' in point else ''))
+            print("%s (%s) is an end or branching point" % (pointID, point['name'] if 'name' in point else ''))
             
+# accumulate distance between branchPoints and other targets
+cumulativeDists = {}
+for branchPointID in branchPointIDs:
+    startPoint = points[branchPointID]
+    startName = startPoint['name'] if 'name' in startPoint else branchPointID
+    distances = []
+    visited = []
+
+    for edgeID in startPoint['edgeSet']:
+
+        currentEdgeID = edgeID
+        if currentEdgeID not in visited:
+            currentPoint = startPoint
+            cumulDist = 0.0
+            while True:
+                endPointID = ways[currentEdgeID]['lastNodeRef'] if currentPoint['id'] == ways[currentEdgeID]['firstNodeRef'] else ways[currentEdgeID]['firstNodeRef']
+                cumulDist += float(ways[currentEdgeID]['length'])
+                distances.append((branchPointID, endPointID, cumulDist))
+                if 'edgeSet' not in points[endPointID]:
+                    print("missing edgeSet for point on edge %s" % ways[edgeID]['name'])
+                    exit(-1)                
+                if len(points[endPointID]['edgeSet']) != 2:
+                    break
+                else:
+                    currentPoint = points[endPointID]
+                    for eID in points[endPointID]['edgeSet']:
+                        if eID != currentEdgeID:
+                            currentEdgeID = eID
+                            break     
+                visited.append(currentEdgeID)
+            print("Start edge %s" % edgeID)
+        cumulativeDists[branchPointID] = distances
+        
+        for relStart, relEnd, dist in distances:
+            print("%s (%s) > %s (%s): %.0f m" % (relStart, points[relStart]['name'] if 'name' in points[relStart] else '', relEnd, points[relEnd]['name'] if 'name' in points[relEnd] else '', dist))    
+
+# print rounded distances to PDF / latex
+# write to csv
+csvPath = os.path.join(scriptDir, "distances.csv")
+sep = ';'
+roundBy = 5
+with open(csvPath, 'w') as csvFile:
+    csvFile.write("%s\n" % sep.join(['Von', 'Nach', 'Entfernung [m]']))
+    for branchPointID, distances in cumulativeDists.items():
+        firstDataLine = True
+        for dataset in distances:
+            roundedDist = "%.0f" % round(float(dataset[2])/roundBy,0)*roundBy
+            endName = points[dataset[1]]['name'] if 'name' in points[dataset[1]] else dataset[1]
+            if firstDataLine:
+                startName = points[dataset[0]]['name'] if 'name' in points[dataset[0]] else dataset[0]
+                
+                csvFile.write("%s\n" % sep.join([startName, endName, roundedDist]))
+                firstDataLine = False
+            else:
+                csvFile.write("%s\n" % sep.join(['~', endName, roundedDist]))
 
 
 
-
-
-
-
+# call pdflatex to generate the result PDF
+texPath = os.path.join(scriptDir, 'distTable.tex')
+process = subprocess.Popen(['pdflatex', '-output-directory', resultDir, texPath])
+process.wait()   
