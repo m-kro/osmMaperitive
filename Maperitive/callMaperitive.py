@@ -95,11 +95,11 @@ cumulativeDists = {}
 for branchPointID in branchPointIDs:
     startPoint = points[branchPointID]
     startName = startPoint['name'] if 'name' in startPoint else branchPointID
-    distances = []
     visited = []
-
+    cumulativeDists[branchPointID] = []
+    
     for edgeID in startPoint['edgeSet']:
-
+        distances = []
         currentEdgeID = edgeID
         if currentEdgeID not in visited:
             currentPoint = startPoint
@@ -121,7 +121,7 @@ for branchPointID in branchPointIDs:
                             break     
                 visited.append(currentEdgeID)
             print("Start edge %s" % edgeID)
-        cumulativeDists[branchPointID] = distances
+        cumulativeDists[branchPointID].append(distances)
         
         for relStart, relEnd, dist in distances:
             print("%s (%s) > %s (%s): %.0f m" % (relStart, points[relStart]['name'] if 'name' in points[relStart] else '', relEnd, points[relEnd]['name'] if 'name' in points[relEnd] else '', dist))    
@@ -133,18 +133,19 @@ sep = ';'
 roundBy = 5
 with open(csvPath, 'w', encoding='utf-8') as csvFile:
     csvFile.write("%s\n" % sep.join(['Von', 'Nach', 'Entfernung [m]']))
-    for branchPointID, distances in cumulativeDists.items():
-        firstDataLine = True
-        for dataset in distances:
-            roundedDist = "%.0f" % (round(dataset[2]/roundBy,0)*roundBy)
-            endName = points[dataset[1]]['name'] if 'name' in points[dataset[1]] else dataset[1]
-            if firstDataLine:
-                startName = points[dataset[0]]['name'] if 'name' in points[dataset[0]] else dataset[0]
-                
-                csvFile.write("%s\n" % sep.join([startName, endName, roundedDist]))
-                firstDataLine = False
-            else:
-                csvFile.write("%s\n" % sep.join(['-', endName, roundedDist]))
+    for branchPointID, distanceList in cumulativeDists.items():
+        for distances in distanceList:
+            firstDataLine = True
+            for dataset in distances:
+                roundedDist = "%.0f" % (round(dataset[2]/roundBy,0)*roundBy)
+                endName = points[dataset[1]]['name'] if 'name' in points[dataset[1]] else dataset[1]
+                if firstDataLine:
+                    startName = points[dataset[0]]['name'] if 'name' in points[dataset[0]] else dataset[0]
+                    
+                    csvFile.write("%s\n" % sep.join([startName, endName, roundedDist]))
+                    firstDataLine = False
+                else:
+                    csvFile.write("%s\n" % sep.join(['', endName, roundedDist]))
 
 
 
