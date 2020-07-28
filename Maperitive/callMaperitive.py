@@ -131,12 +131,12 @@ for branchPointID in branchPointIDs:
 csvPath = os.path.join(scriptDir, "distances.csv")
 sep = ';'
 roundBy = 5
-with open(csvPath, 'w') as csvFile:
+with open(csvPath, 'w', encoding='utf-8') as csvFile:
     csvFile.write("%s\n" % sep.join(['Von', 'Nach', 'Entfernung [m]']))
     for branchPointID, distances in cumulativeDists.items():
         firstDataLine = True
         for dataset in distances:
-            roundedDist = "%.0f" % round(float(dataset[2])/roundBy,0)*roundBy
+            roundedDist = "%.0f" % (round(dataset[2]/roundBy,0)*roundBy)
             endName = points[dataset[1]]['name'] if 'name' in points[dataset[1]] else dataset[1]
             if firstDataLine:
                 startName = points[dataset[0]]['name'] if 'name' in points[dataset[0]] else dataset[0]
@@ -144,11 +144,12 @@ with open(csvPath, 'w') as csvFile:
                 csvFile.write("%s\n" % sep.join([startName, endName, roundedDist]))
                 firstDataLine = False
             else:
-                csvFile.write("%s\n" % sep.join(['~', endName, roundedDist]))
+                csvFile.write("%s\n" % sep.join(['-', endName, roundedDist]))
 
 
 
 # call pdflatex to generate the result PDF
+os.chdir(scriptDir)
 texPath = os.path.join(scriptDir, 'distTable.tex')
 process = subprocess.Popen(['pdflatex', '-output-directory', resultDir, texPath])
 process.wait()   
