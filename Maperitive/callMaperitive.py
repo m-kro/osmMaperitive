@@ -60,7 +60,7 @@ process = subprocess.Popen(['maperitive', '-exitafter', scriptPath])
 process.wait()
 
 # call Inkscape for SVG to PDF conversion
-svgFiles = ['BS_Okerumflut.svg', 'BS_Nord.svg', 'BS_Sued.svg']
+svgFiles = ['WF.svg', 'BS_Sued.svg', 'BS_Sued2.svg', 'BS_Okerumflut.svg', 'BS_Nord.svg', 'BS_Nord2.svg', 'GF.svg']
 resultDir = os.path.join(os.path.dirname(os.path.dirname(scriptPath)), 'Result')
 for svgFile in svgFiles:
     svgPath = os.path.join(resultDir , svgFile)

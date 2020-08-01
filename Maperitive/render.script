@@ -3,14 +3,32 @@ load-source ../OSM/WFBSGF.osm
 use-ruleset location=Paddling.mrules
 apply-ruleset
 dump-python-log
-set-geo-bounds 10.5071340214679,52.24424589651,10.5386336181193,52.275295157692
+
+set-geo-bounds 10.5081273534646,52.1643937726112,10.5453050875835,52.1954430337932
+set-print-bounds-geo
+export-svg file=../Result/WF.svg zoom=16 compatibility=Inkscape
+
+set-geo-bounds 10.49714658075,52.189606189406,10.5343243148689,52.220655450588
+set-print-bounds-geo
+export-svg file=../Result/BS_Sued.svg zoom=16 compatibility=Inkscape
+
+set-geo-bounds 10.4990829104792,52.2180113387125,10.5363974745208,52.2490605998945
+set-print-bounds-geo
+export-svg file=../Result/BS_Sued2.svg zoom=16 compatibility=Inkscape
+
+set-geo-bounds 10.5036193731426,52.24424589651,10.5407971072615,52.275295157692
 set-print-bounds-geo
 export-svg file=../Result/BS_Okerumflut.svg zoom=16 compatibility=Inkscape
 
-set-geo-bounds 10.4513514772228,52.2713213877177,10.522414910033,52.3279282752215
+set-geo-bounds 10.4846441465594,52.2703905835444,10.5218218806783,52.3014398447264
 set-print-bounds-geo
 export-svg file=../Result/BS_Nord.svg zoom=16 compatibility=Inkscape
 
-set-geo-bounds 10.5050795642721,52.2017711745373,10.5296022537322,52.2533267843812
+set-geo-bounds 10.4707476492142,52.2842294839059,10.5079253833331,52.3152787450879
 set-print-bounds-geo
-export-svg file=../Result/BS_Sued.svg zoom=16 compatibility=Inkscape
+export-svg file=../Result/BS_Nord2.svg zoom=16 compatibility=Inkscape
+
+set-geo-bounds 10.4394805301875,52.3059479953092,10.4766582643064,52.3369972564912
+set-print-bounds-geo
+export-svg file=../Result/GF.svg zoom=16 compatibility=Inkscape
+
