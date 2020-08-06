@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[a4paper, total={17cm,23.7cm}]{geometry}
 \usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage[export]{adjustbox}
@@ -10,7 +11,15 @@
 \renewcommand{\listfigurename}{Karten}
 
 \begin{document}
-    \section*{Entfernungen} Die Entfernungen sind ausgehend von Gabelungen und
+    \section*{Paddelstrecken auf der Oker in und um Braunschweig}  
+    Erstellt \the\month/\the\year~für die Kanuabteilung des RSV Braunschweig von M. Barthauer.
+         
+    \subsection*{Anmerkungen} Die Entfernungen beziehen sich auf die in
+    OpenStreetMap vorhandenen, repräsentativen Linien von Wasserläufen und ggf.
+    hinzugefügte Routen. Die Werte sind sowohl auf der Karte als auch in
+    den Tabellen auf 5~m gerundet.
+        
+    \subsection*{Entfernungen} Die Entfernungen sind ausgehend von Gabelungen und
     Einmündungen aus gerechnet -- also im Bürgerpark von der Gabelung am
     Portikus (direkt am RSV-Gelände) und dem Zusammenfluss der Okerarme nördlich
     der Innenstadt. \\
@@ -18,17 +27,12 @@
         \csvautotabular[separator=semicolon]{distances.csv}
     \end{center}
     
-    \section*{Abschnittslängen}
+    \subsection*{Abschnittslängen}
     
     \begin{center}
         \csvautotabular[separator=semicolon]{segments.csv}
     \end{center}    
-    
-    \section*{Anmerkungen}
-    Die Entfernungen beziehen sich auf die in OpenStreetMap vorhandenen,
-    repräsentativen Linien von Wasserläufen und ggf. hinzugefügte Routen auf
-    Seen. Die Entfernungen sind sowohl auf der Karte als auch in der Tabelle auf 5~m gerundet.    
-
+   
     \listoffigures
     
     \begin{figure}[!h]
@@ -85,4 +89,5 @@
 %         \caption{Schwülper}  
 %         \label{fig:map_GF}      
 %     \end{figure}
+
 \end{document}
