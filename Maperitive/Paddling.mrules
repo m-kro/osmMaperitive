@@ -408,7 +408,11 @@ rules
 			min-zoom: 14
 			fill-color : #73a5a5
 			shape-size : 16:8;18:10
+			font-size:13:8;16:12;18:22
+			text : name
+			text-max-width : 20
 		draw : shape
+		draw : text
 		
 	target : platform
 		define
@@ -852,7 +856,7 @@ rules
 		draw : line
 		define
 			min-zoom:13
-			font-size:13:8;16:12;18:16
+			font-size:13:8;16:12;18:26
 			//text-color:#73a5a5
 			text-color : #000000
 			font-weight : bold

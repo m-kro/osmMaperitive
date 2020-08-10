@@ -134,14 +134,13 @@ roundBy = 5
 with open(csvPath, 'w', encoding='utf-8') as csvFile:
     csvFile.write("%s\n" % sep.join(['Von', 'Nach', 'Entfernung [m]']))
     for branchPointID, distanceList in cumulativeDists.items():
+        startName = points[branchPointID]['name'] if 'name' in points[branchPointID] else branchPointID
         for distances in distanceList:
             firstDataLine = True
             for dataset in distances:
                 roundedDist = "%.0f" % (round(dataset[2]/roundBy,0)*roundBy)
                 endName = points[dataset[1]]['name'] if 'name' in points[dataset[1]] else dataset[1]
-                if firstDataLine:
-                    startName = points[dataset[0]]['name'] if 'name' in points[dataset[0]] else dataset[0]
-                    
+                if firstDataLine:                   
                     csvFile.write("%s\n" % sep.join([startName, endName, roundedDist]))
                     firstDataLine = False
                 else:
@@ -150,13 +149,15 @@ with open(csvPath, 'w', encoding='utf-8') as csvFile:
 csvPath = os.path.join(scriptDir, "segments.csv")
 sep = ';'
 roundBy = 5
-segments = [way for way in ways.values() if "length" in way and "name" in way]
+segments = [way for way in ways.values() if "length" in way]
 segments.sort(key=lambda x:x["name"])
 with open(csvPath, 'w', encoding='utf-8') as csvFile:
     csvFile.write("%s\n" % sep.join(['Beschreibung', 'Entfernung [m]']))
-    for segment in segments:
+    for segment in segments:  
+        startName = points[segment['firstNodeRef']]['name'] if segment['firstNodeRef'] in points and 'name' in points[segment['firstNodeRef']] else segment['firstNodeRef']
+        endName = points[segment['lastNodeRef']]['name'] if segment['lastNodeRef'] in points and 'name' in points[segment['lastNodeRef']] else segment['lastNodeRef']
         roundedDist = "%.0f" % (round(float(segment["length"])/roundBy,0)*roundBy)
-        csvFile.write("%s\n" % sep.join([segment["name"], roundedDist]))
+        csvFile.write("%s\n" % sep.join(["%s -- %s" % (startName, endName), roundedDist]))
             
 # call pdflatex to generate the result PDF
 os.chdir(scriptDir)
